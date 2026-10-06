@@ -1,0 +1,3 @@
+[target.x86_64-pc-windows-msvc]
+# Match the native release executable's /MT deployment model.
+rustflags = ["-C", "target-feature=+crt-static"]

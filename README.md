@@ -1,8 +1,8 @@
 # askWAM
 
 `askWAM` requests Microsoft Entra access tokens silently through Windows Web
-Account Manager (WAM). It ships as a .NET Framework client, a standalone native
-x64 client, and an x64 Beacon Object File with a CNA command adapter.
+Account Manager (WAM). It ships as a .NET Framework client, standalone native
+C and Rust x64 clients, and an x64 Beacon Object File with a CNA command adapter.
 
 All frontends can enumerate accounts visible to the client and target an identity
 by its opaque WAM account ID or exact username. They never fall back to interactive
@@ -91,6 +91,25 @@ Building requires Visual Studio 2022 C++ Build Tools and a Windows 10 or Windows
 
 The release executable is statically linked to the C runtime and uses the inbox
 WinRT API surface. Its machine-readable result format is JSON.
+
+## Standalone Rust client
+
+`src/rust` ports the standalone native executable to Rust using Microsoft's
+generated WinRT bindings. It supports the same options, request modes, JSON
+fields, and exit codes. Claims input receives full JSON validation, and all
+output strings are escaped and written as UTF-8 JSON.
+
+Building on Windows requires Rust, Visual Studio C++ Build Tools, and a Windows
+10 or 11 SDK. The build script selects x64 MSVC and the static C runtime:
+
+```powershell
+.\src\rust\build.ps1 -Configuration Release
+.\src\rust\bin\Release\askwam.exe --enum
+.\src\rust\bin\Release\askwam.exe --resource https://graph.microsoft.com --hide
+```
+
+See [the Rust README](src/rust/README.md) for requirements, compatibility details,
+and the Windows testing handoff.
 
 ## Beacon Object File
 
